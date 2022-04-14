@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.socket.mapper.SocketMapper">
+
+    <select id="use" parameterType="User" resultType="User">
+        select * from userr
+        <where>
+            <if test="account != null  ">
+                account = #{account} and password =#{password}
+            </if>
+            <if test="u_id != null ">
+                u_id = #{ u_id }
+            </if>
+        </where>
+    </select>
+
+    <insert id="users" parameterType="com.feng.socket.pojo.User">
+        insert
+        userr (u_id,name,account,password,email,head) value (null,
+        #{name},
+        #{account},
+        #{password},
+        #{email},
+        '1.png'
+        )
+    </insert>
+
+    <select id="getType" parameterType="WorkType" resultType="WorkType">
+        select * from worktype
+        <where>
+            <if test="id != null">
+                id like "%"#{ id} "%"
+            </if>
+            <if test="wt_type != null">
+                wt_type = #{wt_type}
+            </if>
+        </where>
+    </select>
+    <select id="getWorkType" parameterType="WorkType" resultType="WorkType">
+        select * from worktype
+        <where>
+            <if test="wt_type != null">
+                wt_type = #{wt_type}
+            </if>
+        </where>
+    </select>
+
+    <select id="getFriendList" parameterType="Friend" resultType="Friend">
+        select *
+        from friend
+        where me = #{ me }
+    </select>
+
+    <insert id="SetWork" parameterType="Work">
+        insert
+        work (w_id,u_id,title,classify,wt_id,w_time)value (null ,
+        #{u_id},
+        #{title},
+        #{classify},
+        #{wt_id},
+        NOW()
+        )
+    </insert>
+    <select id="getWork" parameterType="Work" resultType="Work">
+        select * from work
+        <where>
+            <if test="w_id != null">
+                w_id = #{w_id}
+            </if>
+            <if test="u_id != null">
+                u_id = #{u_id}
+            </if>
+            <if test="classify != null">
+                classify = #{classify}
+            </if>
+        </where>
+            order by w_id desc
+    </select>
+    <select id="RandomWork" parameterType="Work" resultType="Work">
+        select *
+        from `work`
+        <where>
+            <if test="wt_id != null">
+                wt_id = #{wt_id}
+            </if>
+        </where>
+        order by rand() LIMIT 30;
+    </select>
+
+    <insert id="likeWork" parameterType="Likes">
+        insert
+        likes (me,w_id) value (
+        #{me},
+        #{w_id}
+        )
+    </insert>
+    <delete id="unLikeWork" parameterType="Likes">
+        DELETE
+        FROM likes
+        WHERE me = #{me}
+          and w_id = #{w_id}
+    </delete>
+    <select id="isLikeWork" parameterType="Likes" resultType="Likes">
+        select *
+        FROM `likes`
+        WHERE me = #{me}
+          and w_id = #{w_id}
+    </select>
+    <insert id="collectWork" parameterType="Likes">
+        insert
+        collect (me,w_id) value (
+        #{me},
+        #{w_id}
+        )
+    </insert>
+    <delete id="unCollectWork" parameterType="Likes">
+        DELETE
+        FROM collect
+        WHERE me = #{me}
+          and w_id = #{w_id}
+    </delete>
+    <select id="isCollectWork" parameterType="Likes" resultType="Likes">
+        select *
+        FROM `collect`
+        WHERE me = #{me}
+          and w_id = #{w_id}
+    </select>
+
+    <select id="addAttention" parameterType="Friend"  >
+        insert
+        friend (me,who) value (
+        #{me},
+        #{who}
+        )
+    </select>
+    <delete id="unAttention" parameterType="Friend">
+        DELETE
+        FROM friend
+        WHERE me = #{me}
+          and who = #{who}
+    </delete>
+    <select id="isAttention" parameterType="Friend" resultType="Likes">
+        select *
+        FROM `friend`
+        WHERE me = #{me}
+          and who = #{who}
+    </select>
+    <select id="LIkeWorkCount" parameterType="Likes" resultType="java.lang.Integer">
+        select count(*) from `work` w, likes l where w.w_id=l.w_id and w.u_id = #{me}
+    </select>
+    <select id="collectWorkCount" parameterType="Collect" resultType="java.lang.Integer" >
+        select count(*)
+        from collect
+        <where>
+            <if test="me != null">
+                me = #{me}
+            </if>
+            <if test="w_id != null">
+                w_id = #{w_id}
+            </if>
+        </where>
+    </select>
+    <select id="AttentionCount" parameterType="Collect" resultType="java.lang.Integer" >
+        select count(*)
+        from friend
+        <where>
+            <if test="me != null">
+                me = #{me}
+            </if>
+            <if test="who != null">
+                who = #{who}
+            </if>
+        </where>
+    </select>
+    <select id="useLikeWork" parameterType="java.lang.Integer" resultType="Work">
+        select w.w_id,w.u_id,w.title
+        from `work` w, likes l
+        where w.w_id=l.w_id and l.me = #{integer} ORDER BY w.w_id DESC
+    </select>
+    <select id="useCollectWork" parameterType="Collect" resultType="Work">
+        select w.w_id,w.u_id,w.title
+        from `work` w, collect c
+        where w.w_id=c.w_id
+        and c.me = #{me}
+        ORDER BY w.w_id DESC
+    </select>
+    <select id="AdminLogin" resultType="Admi" parameterType="Admi" >
+        SELECT *
+        FROM admi
+        <where>
+            <if test="a_account != null">
+                a_account = #{a_account} and a_password =#{a_password}
+            </if>
+        </where>
+    </select>
+
+    <select id="getPic" resultType="Pic" parameterType="Work" >
+        select t.wt_type name,count(t.wt_type) value from work w,worktype t where w.wt_id=t.wt_id
+        <if test="w_time != null">
+           and DATE(w_time) = #{w_time}
+        </if>
+        <if test="wt_id != null">
+            and t.wt_id = #{wt_id}
+        </if>
+        GROUP BY t.wt_type
+    </select>
+
+    <select id="getTimeWorkCount" resultType="java.lang.Integer" parameterType="Work" >
+        select count(*)  from `work` w,worktype t where w.wt_id=t.wt_id
+        <if test="w_time != null">
+            and DATE(w_time) = #{w_time}
+        </if>
+    </select>
+    <select id="userData" parameterType="User" resultType="User" >
+        select *
+        from userr
+        <where>
+            <if test="u_id != null">
+                u_id =#{u_id}
+            </if>
+            <if test="name != null">
+                name like "%"#{name} "%"
+            </if>
+            <if test="sex != null">
+                sex = #{sex}
+            </if>
+            <if test="account != null">
+                accoune = #{account}
+            </if>
+        </where>
+    </select>
+    <select id="workData" resultType="WorkData" parameterType="WorkData" >
+        select u.u_id u_id,w.w_id w_id, u.`name` name , u.account account,w.title title , t.wt_type type,w.w_time time
+        from  work w , userr u ,worktype t
+        <where>
+            w.u_id=u.u_id and w.wt_id=t.wt_id
+            <if test="type != null">
+               and t.wt_type = #{type}
+            </if>
+            <if test="u_id != null">
+                and  u.u_id = #{u_id}
+            </if>
+            <if test="name != null">
+                and   u.name like "%"#{name} "%"
+            </if>
+            <if test="account != null">
+                and  u.account = #{account}
+            </if>
+            <if test="title != null">
+                and  w.title like "%"#{title} "%"
+            </if>
+            <if test="time1 != null">
+                and DATE(w.w_time)  BETWEEN #{time1} AND  #{time2}
+            </if>
+        </where>
+
+    </select>
+    <select id="workTypeData" resultType="WorkTypeData">
+        select w.wt_id wt_id,w.router router, w.wt_type type,w.icon icon,k.state state  from `worktype` w left JOIN  (SELECT t.wt_id type, count(t.wt_type) state from worktype t , work w where t.wt_id = w.wt_id GROUP BY t.wt_id) k on w.wt_id = k.type
+    </select>
+    <update id="workTypeUpdate"  parameterType="WorkTypeData" >
+        UPDATE worktype SET icon =#{icon} , wt_type = #{type } ,router = #{router} WHERE wt_id = #{wt_id}
+    </update>
+    <insert id="workTypeInsert" parameterType="WorkTypeData">
+        insert  worktype(wt_id,wt_type,icon,router)  VALUE (null,#{type},#{icon},#{router})
+    </insert>
+
+    <select id="getAdmi" parameterType="Admi" resultType="Admi">
+        SELECT * FROM `admi` a , grade g
+        <where>
+            a.g_id= g.g_id
+            <if test="a_id != null">
+                and a.a_id = #{a_id}
+            </if>
+            <if test="a_name != null">
+                and  a_name like "%"#{a_name} "%"
+            </if>
+            <if test="a_account != null">
+                and a.a_account = #{a_account}
+            </if>
+        </where>
+    </select>
+    <update id="updateAdmi"  parameterType="Admi">
+        UPDATE admi SET a_name = #{a_name},a_phone = #{a_phone},a_email = #{a_email} WHERE a_id = #{a_id}
+    </update>
+    <insert id="insertAdmi" parameterType="Admi">
+        insert admi (a_id,a_name,a_account,a_password,a_phone,a_email,g_id)
+            value(null,#{a_name},#{a_account},#{a_password},#{a_phone},#{a_email},#{g_id})
+    </insert>
+
+    <select id="getGrade" parameterType="Grade" resultType="Grade" >
+        select * from grade
+    </select>
+
+    <select id="relateWork" resultType="Work" parameterType="Work">
+        SELECT * from `work`
+        where u_id in (select who from friend where me = #{u_id})
+        order by rand() LIMIT 30;
+    </select>
+
+    <select id="searchWorkData" parameterType="WorkData" resultType="WorkData">
+        select u.u_id u_id,w.w_id w_id, u.`name` name , u.account account,w.title title , t.wt_type type,w.w_time time
+        from  work w , userr u ,worktype t
+        <where>
+            w.u_id=u.u_id and w.wt_id=t.wt_id
+            and  w.title like "%"#{title} "%"
+            limit #{whichPage},10
+        </where>
+    </select>
+</mapper>

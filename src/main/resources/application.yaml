@@ -1,0 +1,24 @@
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.feng.socket.pojo
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 123456
+    url: jdbc:mysql:///reallyshare?useUnicode=true&characterEncoding=utf8
+    username: root
+  redis:
+    host: 127.0.0.1
+    password: 123456
+    port: 6379
+    timeout: 5000
+  web:
+    resources:
+      static-locations: file:D:/ReallyShare/,classpath:/static/
+  mvc:
+    static-path-pattern: /**
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 400MB
