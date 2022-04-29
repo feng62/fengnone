@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper
 @Component
 public interface SocketMapper {
-    User getUse(User user);
 
     Integer users(User user);//添加用户
 
@@ -38,15 +37,15 @@ public interface SocketMapper {
 
     Integer unCollectWork(Collect collect);//取消收藏
 
-    List<Collect> isCollectWork(Collect collect);//是否收藏
+//    List<Collect> isCollectWork(Collect collect);//是否收藏
 
-    Work OneWork(Work work);  //作品详情
+//    Work OneWork(Work work);  //作品详情
 
-    Integer addAttention(Friend friend);//添加好友
+//    Integer addAttention(Friend friend);//添加好友
 
-    Integer unAttention(Friend friend);//取消关注
+//    Integer unAttention(Friend friend);//取消关注
 
-    List<Friend> isAttention(Friend friend);//是否是好友
+//    List<Friend> isAttention(Friend friend);//是否是好友
 
     Integer LIkeWorkCount(Likes likes);//总点赞数
 

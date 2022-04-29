@@ -1,8 +1,10 @@
 package com.feng.socket;
 
+import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.feng.socket.utils.JWTutils;
+import com.feng.socket.utils.R;
 import lombok.val;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -58,6 +60,11 @@ public class MyInterceptor implements HandlerInterceptor {
                 response.setContentType("application/json");
                 out = response.getWriter();
                 out.append(res.toString());
+                //再拦截器中拦截相应并且返回
+                PrintWriter pw = response.getWriter();
+                pw.write(JSON.toJSONString(R.ok()));
+                pw.flush();
+                pw.close();
                 return false;
             }
         }

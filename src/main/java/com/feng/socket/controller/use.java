@@ -78,7 +78,7 @@ public class use {
         return R.error().message("查无此人");
     }
 
-    @ApiModelProperty("验证码")
+    @ApiModelProperty("二维码")
     @GetMapping(value = "/QRCode",produces = "image/png")
     @ResponseBody
     public byte[] QRCode(@RequestParam("name") String name) throws Exception {

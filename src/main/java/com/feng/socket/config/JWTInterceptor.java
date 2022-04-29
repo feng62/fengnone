@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.feng.socket.pojo.Color;
 import com.feng.socket.utils.JWTutils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -40,4 +41,5 @@ public class JWTInterceptor implements HandlerInterceptor {
         response.getWriter().println(json);
         return false;
     }
+
 }
