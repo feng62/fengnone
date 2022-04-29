@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(getmyInterceptor())
                 .addPathPatterns("/**")//拦截所有路径
                 .excludePathPatterns(new String[]{"/img/**","/ReallyShare/**","/web/**"});
+        registry.addInterceptor(new JWTInterceptor());
     }
 
     @Override
